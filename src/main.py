@@ -107,13 +107,14 @@ if __name__ == "__main__":
     chatgpt = ChatGPT(gpt_api_key)
     cqLog(logPath=PYCQ_BOT_LOG_PATH)
 
-    cq_api = cqHttpApi(download_path=PYCQ_BOT_PATH, host=WEBSOCKET_HOST)
+    cq_api = cqHttpApi(download_path=PYCQ_BOT_PATH)
 
     bot = cq_api.create_bot(
         group_id_list=[
             882148260,
             768509926
-        ]
+        ],
+        host=WEBSOCKET_HOST
     )
 
     bot.command(query_gpt, "chatgpt", {
