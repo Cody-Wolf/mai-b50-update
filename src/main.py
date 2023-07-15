@@ -8,7 +8,7 @@ from pycqBot.data import Message
 from chatgpt import ChatGPT
 from account_db import AccountsDB
 
-ACCOUNTS_DB_FILE_PATH = "../pycq_bot/accounts.db"
+ACCOUNTS_DB_FILE_PATH = "pycq_bot/accounts.db"
 PYCQ_BOT_PATH = "pycq_bot"
 PYCQ_BOT_LOG_PATH = "pycq_bot/cqLogs"
 
@@ -132,7 +132,7 @@ if __name__ == "__main__":
         "type": "all"
     })
 
-    bot.start(PYCQ_BOT_PATH)
+    bot.start(go_cqhttp_path=PYCQ_BOT_PATH)
 
     bot.stop()
     accounts.close()
