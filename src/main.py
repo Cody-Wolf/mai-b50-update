@@ -90,7 +90,7 @@ def register_b50(command_data, message: Message):
 if __name__ == "__main__":
     gpt_api_key = input('输入 chatgpt key, 留空代表不使用: ')
     chatgpt = ChatGPT(gpt_api_key)
-    cqLog(logPath="pycq_bot")
+    cqLog(logPath="pycq_bot/cqLogs")
 
     cq_api = cqHttpApi(download_path="pycq_bot")
 
