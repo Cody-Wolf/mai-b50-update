@@ -12,6 +12,8 @@ ACCOUNTS_DB_FILE_PATH = "../pycq_bot/accounts.db"
 PYCQ_BOT_PATH = "pycq_bot"
 PYCQ_BOT_LOG_PATH = "pycq_bot/cqLogs"
 
+WEBSOCKET_HOST = "ws://127.0.0.8080"
+
 HTTP_REQUEST_TIMEOUT_SECOND = 60
 UPDATE_LIMIT_SECOND = 15 * 60
 
@@ -105,7 +107,7 @@ if __name__ == "__main__":
     chatgpt = ChatGPT(gpt_api_key)
     cqLog(logPath=PYCQ_BOT_LOG_PATH)
 
-    cq_api = cqHttpApi(download_path=PYCQ_BOT_PATH)
+    cq_api = cqHttpApi(download_path=PYCQ_BOT_PATH, host=WEBSOCKET_HOST)
 
     bot = cq_api.create_bot(
         group_id_list=[
