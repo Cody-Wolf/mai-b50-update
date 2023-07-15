@@ -4,7 +4,7 @@ import httpx
 from pycqBot import cqHttpApi, cqLog
 from pycqBot.data import Message
 
-from src.chatgpt import ChatGPT
+from chatgpt import ChatGPT
 
 accounts = {}
 query_qids = set()
