@@ -86,7 +86,7 @@ def query_b50(command_data, message: Message):
         if "更新完成" in response.text:
             message.reply("更新完成！自动帮你询问 b50。")
             time.sleep(1)
-            message.reply("b50 " + accounts.query_account_by_qid(message.sender.id)["user_name"])
+            message.reply("b50 " + accounts.query_account_by_qid(message.sender.id)["username"])
             query_qids.pop(message.sender.id)
             return
 
