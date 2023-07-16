@@ -18,7 +18,7 @@ HTTP_REQUEST_TIMEOUT_SECOND = 60
 UPDATE_LIMIT_SECOND = 15 * 60
 
 accounts = AccountsDB(ACCOUNTS_DB_FILE_PATH)
-query_qids = set()
+query_qids = dict()
 
 
 def query_gpt(command_data, message: Message):
@@ -33,8 +33,12 @@ def query_b50(command_data, message: Message):
         return
 
     if qid in query_qids:
-        message.reply("你已经在更新了！请等待此次更新完毕！")
-        return
+        if time.time() - query_qids[qid] > UPDATE_LIMIT_SECOND:
+            query_qids.pop(qid)
+        else:
+            delta_time = time.time() - query_qids[qid]
+            message.reply(f'''距离上次更新的时间为 {delta_time} 秒，至少等待 15 分钟或更新成功后，才能再次更新！''')
+            return
 
     response = httpx.post("https://maimai.bakapiano.com/bot", json=account, timeout=HTTP_REQUEST_TIMEOUT_SECOND)
     trace_url = response.text
@@ -44,8 +48,7 @@ def query_b50(command_data, message: Message):
     你也可以通过链接手动查询进度：{trace_url}。
     ''')
 
-    query_qids.add(qid)
-    start_time = time.time()
+    query_qids[qid] = time.time()
     sent_friend_request = False
     start_update = False
 
@@ -57,7 +60,7 @@ def query_b50(command_data, message: Message):
     get_url = trace_url.replace("#/", "").replace("trace/", "trace?uuid=")
     get_url = get_url[:len(get_url) - 1]
 
-    while time.time() - start_time < UPDATE_LIMIT_SECOND:
+    while time.time() - query_qids[qid] < UPDATE_LIMIT_SECOND:
 
         response = httpx.get(get_url, timeout=HTTP_REQUEST_TIMEOUT_SECOND)
         print(response.text)
@@ -72,25 +75,25 @@ def query_b50(command_data, message: Message):
 
         if "玩家不存在" in response.text:
             message.reply("好友代码错误，推荐向请重新向 bot 注册信息！")
-            query_qids.remove(message.sender.id)
+            query_qids.pop(message.sender.id)
             return
 
         if "长时间未接受好友请求" in response.text:
             message.reply("5 分钟内未接受好友请求，请重新更新！")
-            query_qids.remove(message.sender.id)
+            query_qids.pop(message.sender.id)
             return
 
         if "更新完成" in response.text:
             message.reply("更新完成！自动帮你询问 b50。")
             time.sleep(1)
             message.reply("b50 " + accounts.query_account_by_qid(message.sender.id)["user_name"])
-            query_qids.remove(message.sender.id)
+            query_qids.pop(message.sender.id)
             return
 
         time.sleep(5)
 
-    message.reply("更新超时，请重新更新！")
-    query_qids.remove(message.sender.id)
+    message.reply("更新超时（流程 15 分钟内未完成），请重新更新！")
+    query_qids.pop(message.sender.id)
 
 
 def register_b50(command_data, message: Message):
