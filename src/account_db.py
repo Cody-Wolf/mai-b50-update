@@ -1,5 +1,4 @@
 import sqlite3
-from sqlite3 import Connection
 
 
 class AccountsDB:
@@ -24,6 +23,7 @@ class AccountsDB:
         ''')
         for row in cursor:
             return {"username": row[0], "password": row[1], "friendCode": row[2]}
+        self.connect.commit()
         return {}
 
     def insert_account(self, qid: int, user_name: str, password: str, friend_code: str,
@@ -40,6 +40,7 @@ class AccountsDB:
         '''.format(qid=qid, user_name=user_name, password=password, friend_code=friend_code)
         print("sql: ", sql)
         self.connect.execute(sql)
+        self.connect.commit()
 
     def close(self):
         self.connect.close()

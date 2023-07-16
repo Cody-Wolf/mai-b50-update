@@ -39,10 +39,10 @@ def query_b50(command_data, message: Message):
     response = httpx.post("https://maimai.bakapiano.com/bot", json=account, timeout=HTTP_REQUEST_TIMEOUT_SECOND)
     trace_url = response.text
     message.reply(f'''
-        已提交 b50 更新申请！
-        bot 在 添加好友/添加完成开始更新/更新完成 三个阶段会通知你。
-        你也可以通过链接手动查询进度：{trace_url}。
-        ''')
+    已提交 b50 更新申请！
+    bot 在 添加好友/添加完成开始更新/更新完成 三个阶段会通知你。
+    你也可以通过链接手动查询进度：{trace_url}。
+    ''')
 
     query_qids.add(qid)
     start_time = time.time()
@@ -99,7 +99,7 @@ def register_b50(command_data, message: Message):
         accounts.insert_account(qid, command_data[0], command_data[1], command_data[2])
         message.reply("注册成功！")
     else:
-        message.reply("参数个数错误！格式为：查分器账号 密码 好友代码, 不要有多于的空格！")
+        message.reply("参数个数错误！格式为：查分器账号 密码 好友代码, 不要有多余的空格！")
 
 
 if __name__ == "__main__":
